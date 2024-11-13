@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 
 export default function LandingPage() {
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,17 +28,6 @@ export default function LandingPage() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="container mx-auto py-6 px-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">ConversAI</h1>
-        <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="p-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
-          aria-label="Toggle theme"
-        >
-          {theme === "dark" ? (
-            <Sun className="h-5 w-5" />
-          ) : (
-            <Moon className="h-5 w-5" />
-          )}
-        </button>
       </header>
 
       <main className="container mx-auto py-12 px-4 md:px-6 lg:px-8">
@@ -60,7 +48,7 @@ export default function LandingPage() {
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <FeatureCard icon={<Users />} title="Interview Prep" />
           <FeatureCard icon={<FileText />} title="Meeting Summary" />
-          <FeatureCard icon={<PenTool />} title="Content Creation" />
+          <FeatureCard icon={<Mic />} title="Accessibility" />
           <FeatureCard icon={<BookOpen />} title="Training" />
         </section>
 

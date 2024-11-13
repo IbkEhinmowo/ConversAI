@@ -96,8 +96,8 @@ export default function ConversAI() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl h-[80vh] flex flex-col">
+    <div className="min-h-screen bg-background flex items-center justify-center p-2 ">
+      <Card className=" max-w-6xl h-[100vh] flex flex-col w-[90vw]">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>ConversAI</CardTitle>

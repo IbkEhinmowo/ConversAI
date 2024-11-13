@@ -5,7 +5,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Mic,
-  StopCircle,
   Send,
   Sun,
   Moon,
@@ -23,29 +22,11 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTheme } from "next-themes";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-// Mock function to simulate speech-to-text
-const mockSpeechToText = () => {
-  return new Promise<string>((resolve) => {
-    setTimeout(() => {
-      resolve("This is a simulated speech-to-text result.");
-    }, 2000);
-  });
-};
-
-// Mock function to simulate LLM processing
-const mockLLMProcess = (input: string, task: string) => {
-  return new Promise<string>((resolve) => {
-    setTimeout(() => {
-      resolve(`Processed ${task} result for input: ${input}`);
-    }, 1500);
-  });
-};
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 type Message = {
   role: "user" | "ai";
@@ -53,51 +34,35 @@ type Message = {
 };
 
 export default function ConversAI() {
-  const [isListening, setIsListening] = useState(false);
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
   const [activeTab, setActiveTab] = useState("interview");
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setMounted(true);
-    setTheme("dark");
-  }, [setTheme]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+useEffect(() => {
+  console.log("Component mounted");
+  setTheme("dark");
+}, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, []);
 
-  const handleListen = async () => {
-    setIsListening(true);
-    const result = await mockSpeechToText();
-    setInput(result);
-    setIsListening(false);
-  };
+  // Placeholder messages to display in the chat bubbles
+  const messages: Message[] = [
+    { role: "user", content: "Hello, how can I help you?" },
+    { role: "ai", content: "I'm looking for information on your services." },
+  ];
+  localStorage.setItem("userData", JSON.stringify(messages));
+  const storedMessages = localStorage.getItem("userData");
 
-  const handleStop = () => {
-    setIsListening(false);
-  };
-
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    const userMessage: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-
-    const result = await mockLLMProcess(input, activeTab);
-    const aiMessage: Message = { role: "ai", content: result };
-    setMessages((prev) => [...prev, aiMessage]);
-  };
-
-  if (!mounted) return null;
+  if (storedMessages) {
+    const messages2: Message[] = JSON.parse(storedMessages); // Deserialize the JSON string back into an array of Message objects
+    console.log(messages2, "messages2");
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-2 ">
-      <Card className=" max-w-6xl h-[100vh] flex flex-col w-[90vw]">
+      <Card className="max-w-6xl h-[100vh] flex flex-col w-[90vw]">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>ConversAI</CardTitle>
@@ -149,7 +114,9 @@ export default function ConversAI() {
               >
                 <div
                   className={`flex items-start ${
-                    message.role === "user" ? "flex-row-reverse" : "flex-row"
+                    message.role === "user"
+                      ? "flex-row-reverse"
+                      : "flex-row"
                   }`}
                 >
                   <Avatar className="w-8 h-8">
@@ -174,16 +141,11 @@ export default function ConversAI() {
         </CardContent>
         <CardFooter>
           <div className="flex w-full items-center space-x-2">
-            <Button onClick={handleListen} disabled={isListening} size="icon">
-              <Mic className="h-4 w-4" />
-            </Button>
             <Input
               placeholder="Type your message here..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
+              
             />
-            <Button onClick={handleSend} size="icon">
+            <Button size="icon" >
               <Send className="h-4 w-4" />
             </Button>
           </div>

@@ -33,9 +33,69 @@ type Message = {
   content: string;
 };
 
+
+
+
+
+
+
 export default function ConversAI() {
   const [activeTab, setActiveTab] = useState("interview");
   const { theme, setTheme } = useTheme();
+
+
+
+  /////////////////////////////////////////
+  /////////////////  API   //////////////////////
+  /////////////////////////////////////////
+  const [response, setResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const generateResponse = async (prompt) => {
+    setLoading(true);
+    setResponse('');
+    console.log('Prompt:', response);
+    
+    try {
+      const response = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama3.2',
+          prompt: prompt
+        })
+      });
+
+      const reader = response.body.getReader();
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        // Convert the chunk to text
+        const chunk = new TextDecoder().decode(value);
+        const jsonLines = chunk.split('\n').filter(Boolean);
+
+        for (const line of jsonLines) {
+          const data = JSON.parse(line);
+          setResponse(prev => prev + data.response);
+          
+          if (data.done) {
+            setLoading(false);
+            return;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setLoading(false);
+    }
+};
+    //////////////////////////////
+    //////////////////////////////
+    //////////////////////////////
 
   // Placeholder messages to display in the chat bubbles
   const messages1: Message[] = [
@@ -56,7 +116,7 @@ export default function ConversAI() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    console.log("Component mounted");
+    
     setTheme("dark");
   }, []);
 
@@ -67,6 +127,7 @@ export default function ConversAI() {
   const handleClick = () => {
     if (!inputValue) return; // Don't send
     const newMessage: Message = { role: "user", content: inputValue };
+    generateResponse(inputValue);
     setMessages([...messages, newMessage]);
     setInputValue(""); // Clear the input field
   };
@@ -75,6 +136,7 @@ export default function ConversAI() {
     if (!inputValue) return; // Don't send
     if (event.key === "Enter") {
       const newMessage: Message = { role: "user", content: inputValue };
+      generateResponse(inputValue);
       setMessages([...messages, newMessage]);
       setInputValue(""); // Clear the input field
     }
@@ -164,7 +226,7 @@ export default function ConversAI() {
               value={inputValue}
               onKeyDown={handleKey}
             />
-            <Button size="icon" onClick={handleClick}>
+            <Button size="icon" onClick={handleClick} disabled={loading}>
               <Send className="h-4 w-4" />
             </Button>
           </div>

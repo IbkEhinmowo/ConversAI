@@ -38,50 +38,49 @@ type Message = {
 export default function ConversAI() {
   const [activeTab, setActiveTab] = useState("interview");
   const { theme, setTheme } = useTheme();
-  const [messages, setMessages] = useState<Message[]>([
-  { role: "user", content: "Hello, how can I help you?" },
-  { role: "ai", content: "I'm looking for information on your services." },
-]);
-
-// Initialize the input state
-const [inputValue, setInputValue] = useState("");
-
-// Handle input change
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setInputValue(e.target.value);
-};
-
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-useEffect(() => {
-  console.log("Component mounted");
-  setTheme("dark");
-}, []);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
-const handleClick = () => {
-  const newMessage: Message = { role: "user", content: inputValue };
-  setMessages([...messages, newMessage]);
-  setInputValue(""); // Clear the input field
-};
-const handleKey = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-        const newMessage: Message = { role: "user", content: inputValue };
-        setMessages([...messages, newMessage]);
-        setInputValue(""); // Clear the input field
-    }
-}
-
-
-
 
   // Placeholder messages to display in the chat bubbles
   const messages1: Message[] = [
     { role: "user", content: "Hello, how can I help you?" },
     { role: "ai", content: "I'm looking for information on your services." },
   ];
+
+  const [messages, setMessages] = useState<Message[]>(messages1);
+
+  // Initialize the input state
+  const [inputValue, setInputValue] = useState("");
+
+  // Handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    console.log("Component mounted");
+    setTheme("dark");
+  }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const handleClick = () => {
+    if (!inputValue) return; // Don't send
+    const newMessage: Message = { role: "user", content: inputValue };
+    setMessages([...messages, newMessage]);
+    setInputValue(""); // Clear the input field
+  };
+
+  const handleKey = (event: React.KeyboardEvent) => {
+    if (!inputValue) return; // Don't send
+    if (event.key === "Enter") {
+      const newMessage: Message = { role: "user", content: inputValue };
+      setMessages([...messages, newMessage]);
+      setInputValue(""); // Clear the input field
+    }
+  };
+
   localStorage.setItem("userData", JSON.stringify(messages1));
   const storedMessages = localStorage.getItem("userData");
 
@@ -168,6 +167,13 @@ const handleKey = (event: React.KeyboardEvent) => {
         </CardContent>
         <CardFooter>
           <div className="flex w-full items-center space-x-2">
+            <Button
+              
+              size="icon"
+              variant="secondary"
+            >
+              <Mic className="h-4 w-4" />
+            </Button>
             <Input
               placeholder="Type your message here..."
               onChange={handleInputChange}

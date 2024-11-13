@@ -33,9 +33,23 @@ type Message = {
   content: string;
 };
 
+
+
 export default function ConversAI() {
   const [activeTab, setActiveTab] = useState("interview");
   const { theme, setTheme } = useTheme();
+  const [messages, setMessages] = useState<Message[]>([
+  { role: "user", content: "Hello, how can I help you?" },
+  { role: "ai", content: "I'm looking for information on your services." },
+]);
+
+// Initialize the input state
+const [inputValue, setInputValue] = useState("");
+
+// Handle input change
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setInputValue(e.target.value);
+};
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 useEffect(() => {
@@ -47,17 +61,32 @@ useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+const handleClick = () => {
+  const newMessage: Message = { role: "user", content: inputValue };
+  setMessages([...messages, newMessage]);
+  setInputValue(""); // Clear the input field
+};
+const handleKey = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+        const newMessage: Message = { role: "user", content: inputValue };
+        setMessages([...messages, newMessage]);
+        setInputValue(""); // Clear the input field
+    }
+}
+
+
+
+
   // Placeholder messages to display in the chat bubbles
-  const messages: Message[] = [
+  const messages1: Message[] = [
     { role: "user", content: "Hello, how can I help you?" },
     { role: "ai", content: "I'm looking for information on your services." },
   ];
-  localStorage.setItem("userData", JSON.stringify(messages));
+  localStorage.setItem("userData", JSON.stringify(messages1));
   const storedMessages = localStorage.getItem("userData");
 
   if (storedMessages) {
     const messages2: Message[] = JSON.parse(storedMessages); // Deserialize the JSON string back into an array of Message objects
-    console.log(messages2, "messages2");
   }
 
   return (
@@ -114,14 +143,12 @@ useEffect(() => {
               >
                 <div
                   className={`flex items-start ${
-                    message.role === "user"
-                      ? "flex-row-reverse"
-                      : "flex-row"
+                    message.role === "user" ? "flex-row-reverse" : "flex-row"
                   }`}
                 >
                   <Avatar className="w-8 h-8">
                     <AvatarFallback>
-                      {message.role === "user" ? "U" : "AI"}
+                      {message.role === "user" ? "You" : "AI"}
                     </AvatarFallback>
                   </Avatar>
                   <div
@@ -143,9 +170,11 @@ useEffect(() => {
           <div className="flex w-full items-center space-x-2">
             <Input
               placeholder="Type your message here..."
-              
+              onChange={handleInputChange}
+              value={inputValue}
+              onKeyDown={handleKey}
             />
-            <Button size="icon" >
+            <Button size="icon" onClick={handleClick}>
               <Send className="h-4 w-4" />
             </Button>
           </div>

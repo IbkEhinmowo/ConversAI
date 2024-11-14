@@ -54,7 +54,7 @@ export default function ConversAI() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "llama3.2",
+          model: "phi3.5",
           prompt: prompt,
         }),
       });

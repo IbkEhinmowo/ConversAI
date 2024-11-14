@@ -225,7 +225,7 @@ export default function ConversAI() {
                     </AvatarFallback>
                   </Avatar>
                   <div
-                    className={`mx-2 p-3 rounded-lg max-w-xl  ${
+                    className={`mx-2 p-3 rounded-2xl max-w-3xl w-100 ${
                       message.role === "user"
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted"

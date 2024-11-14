@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import ReactMarkdown from "react-markdown";
 
 type Message = {
   role: "user" | "ai";
@@ -54,7 +55,7 @@ export default function ConversAI() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "phi3.5",
+          model: "llama3.2",
           prompt: prompt,
         }),
       });
@@ -182,11 +183,7 @@ export default function ConversAI() {
           </div>
         </CardHeader>
         <CardContent className="flex-grow flex flex-col">
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="mb-4"
-          >
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="interview">
                 <Users className="w-4 h-4 mr-2" />
@@ -231,7 +228,28 @@ export default function ConversAI() {
                         : "bg-muted"
                     }`}
                   >
-                    {message.content}
+                    <ReactMarkdown
+                      components={{
+                        code({ node, inline, className, children, ...props }) {
+                          return !inline && className ? (
+                            <pre className="bg-gray-800 text-white p-2 rounded overflow-auto">
+                              <code className={className} {...props}>
+                                {children}
+                              </code>
+                            </pre>
+                          ) : (
+                            <code
+                              className="bg-gray-400 text-white p-1 rounded"
+                              {...props}
+                            >
+                              {children}
+                            </code>
+                          );
+                        },
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               </div>

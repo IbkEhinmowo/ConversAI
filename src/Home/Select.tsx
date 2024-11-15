@@ -1,3 +1,4 @@
+// Select.jsx
 import React from 'react';
 import {
   Select,
@@ -7,25 +8,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+export default function Selector({ onSelect }) {
 
-export default function Selector() {
+  const handleChange = (value) => {
+    onSelect(value);
+    console.log(value);
+  };
 
-
-
-    return (
-      <>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Theme" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">phi 3.5</SelectItem>
-            <SelectItem value="dark">Llama-3.2 3b</SelectItem>
-            <SelectItem value="system">System</SelectItem>
-          </SelectContent>
-        </Select>
-      </>
-    );
-
-
+  return (
+    <Select onValueChange={handleChange}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Select Model" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="phi3.5">phi 3.5</SelectItem>
+        <SelectItem value="Llama3.2">Llama-3.2 3b</SelectItem>
+        <SelectItem value="qwen2.5">qwen 2.5:3b </SelectItem>
+      </SelectContent>
+    </Select>
+  );
 }

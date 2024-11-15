@@ -18,13 +18,15 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReactMarkdown from "react-markdown";
+import Select from "./Select";
+import { text } from "node:stream/consumers";
 
 export default function ConversAI() {
   const initialMessages = [
     { role: "user", content: "Hello, how can I help you?" },
     { role: "ai", content: "I'm looking for information on your services." },
-    { role: "user", content: "Sure, what would you like to know?" },
-    { role: "ai", content: "I'm looking for information on your services." },
+    { role: "user", content: "my name is ibukun" },
+    { role: "ai", content: "okay " },
   ];
 
   const [activeTab, setActiveTab] = useState("interview"); // for tab switch
@@ -33,89 +35,101 @@ export default function ConversAI() {
   const [inputValue, setInputValue] = useState("");
   const scrollAreaRef = useRef(null);
   const [response, setResponse] = useState("");
+  const [model, setModel] = useState("");
 
 
-const handleClick = async () => {
-  setLoading(true);
-  setInputValue("");
-  setResponse("");
-  
-  const userMessage = { role: "user", content: inputValue };
-  const newMessages = [...messages, userMessage];
-  setMessages(newMessages);
 
-  // Add empty assistant message
-  const aiMessage = { role: "assistant", content: "" };
-  setMessages(prev => [...prev, aiMessage]);
-  const aiMessageIndex = newMessages.length; // Index of the assistant message
 
-  const requestPayload = {
-    model: "llama3.2",
-    messages: [...newMessages, aiMessage],
-  };
+  const handleModelChange = (value) => {
+    setModel(value);
 
-  try {
-    const res = await fetch("http://localhost:11434/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestPayload),
-    });
+    const userMessage = { role: "user", content: `new Selected llm model: ${value}` };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    
+  }
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch");
-    }
+  const handleClick = async () => {
+    setLoading(true);
+    setInputValue("");
+    setResponse("");
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let streamResponse = "";
 
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+    const userMessage = { role: "user", content: inputValue };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
 
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n');
+    // Add empty assistant message
+    const aiMessage = { role: "assistant", content: "" };
+    setMessages((prev) => [...prev, aiMessage]);
+    const aiMessageIndex = newMessages.length; // Index of the assistant message
 
-      for (const line of lines) {
-        if (!line) continue;
+    const requestPayload = {
+      model: model,
+      messages: [...newMessages, aiMessage],
+    };
 
-        try {
-          const jsonResponse = JSON.parse(line);
+    try {
+      const res = await fetch("http://localhost:11434/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestPayload),
+      });
 
-          if (jsonResponse.message?.content) {
-            streamResponse += jsonResponse.message.content;
-            setResponse(streamResponse);
+      if (!res.ok) {
+        throw new Error("Failed to fetch");
+      }
 
-            // Update the assistant message in messages
-            setMessages(prevMessages => {
-              const updatedMessages = [...prevMessages];
-              updatedMessages[aiMessageIndex] = {
-                ...updatedMessages[aiMessageIndex],
-                content: streamResponse,
-              };
-              return updatedMessages;
-            });
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let streamResponse = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (!line) continue;
+
+          try {
+            const jsonResponse = JSON.parse(line);
+
+            if (jsonResponse.message?.content) {
+              streamResponse += jsonResponse.message.content;
+              setResponse(streamResponse);
+
+              // Update the assistant message in messages
+              setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+                updatedMessages[aiMessageIndex] = {
+                  ...updatedMessages[aiMessageIndex],
+                  content: streamResponse,
+                };
+                return updatedMessages;
+              });
+            }
+
+            if (jsonResponse.done) {
+              break;
+            }
+          } catch (error) {
+            console.error("Error parsing JSON chunk:", error);
           }
-
-          if (jsonResponse.done) {
-            break;
-          }
-        } catch (error) {
-          console.error("Error parsing JSON chunk:", error);
         }
       }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-// Update useEffect
-
+  // Update useEffect
 
   //   useEffect(() => {
   //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -143,6 +157,7 @@ const handleClick = async () => {
             <CardDescription>
               Your AI-powered assistant for various tasks
             </CardDescription>
+            <Select onSelect={handleModelChange} />
           </div>
         </CardHeader>
         <CardContent className="flex-grow flex flex-col">
@@ -168,7 +183,7 @@ const handleClick = async () => {
           </Tabs>
           <ScrollArea
             ref={scrollAreaRef}
-            className="flex-grow pr-4 overflow-y-auto border border-black-500 p-3 rounded-sm max-h-[700px] scroll-smooth"
+            className="flex-grow pr-4 overflow-y-hidden border border-black-500 p-3 rounded-sm h-[5em] scroll-smooth"
           >
             {messages.map((message, index) => (
               <div
@@ -216,7 +231,6 @@ const handleClick = async () => {
                     >
                       {message.content}
                     </ReactMarkdown>
-                   
                   </div>
                 </div>
               </div>

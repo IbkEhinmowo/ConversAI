@@ -37,23 +37,21 @@ export default function ConversAI() {
   const [response, setResponse] = useState("");
   const [model, setModel] = useState("");
 
-
-
-
   const handleModelChange = (value) => {
     setModel(value);
 
-    const userMessage = { role: "user", content: `new Selected llm model: ${value}` };
+    const userMessage = {
+      role: "user",
+      content: `new Selected llm model: ${value}`,
+    };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
-    
-  }
+  };
 
   const handleClick = async () => {
     setLoading(true);
     setInputValue("");
     setResponse("");
-
 
     const userMessage = { role: "user", content: inputValue };
     const newMessages = [...messages, userMessage];

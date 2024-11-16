@@ -23,8 +23,8 @@ import { text } from "node:stream/consumers";
 
 export default function ConversAI() {
   const initialMessages = [
-    { role: "user", content: "Hello, how can I help you?" },
-    { role: "ai", content: "I'm looking for information on your services." },
+    { role: "user", content: "your name is beth" },
+    { role: "ai", content: "okay" },
     { role: "user", content: "my name is ibukun" },
     { role: "ai", content: "okay " },
   ];
@@ -41,8 +41,10 @@ export default function ConversAI() {
     setModel(value);
 
     const userMessage = {
-      role: "user",
+      role: "ai",
       content: `new Selected llm model: ${value}`,
+      
+      
     };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
@@ -52,9 +54,24 @@ export default function ConversAI() {
     setLoading(true);
     setInputValue("");
     setResponse("");
+    console.log("model", model);
 
-    const userMessage = { role: "user", content: inputValue };
-    const newMessages = [...messages, userMessage];
+
+
+
+    if (model === "") {
+      const userMessage = {
+        role: "ai",
+        content: "Please select a model",
+      };
+      const newMessages = [...messages, userMessage];
+      setMessages(newMessages);
+      setLoading(false);
+      return;
+    }
+
+    const modelMessage = { role: "user", content: inputValue };
+    const newMessages = [...messages, modelMessage];
     setMessages(newMessages);
 
     // Add empty assistant message
@@ -63,7 +80,7 @@ export default function ConversAI() {
     const aiMessageIndex = newMessages.length; // Index of the assistant message
 
     const requestPayload = {
-      model: model,
+      model: "llama3.2",
       messages: [...newMessages, aiMessage],
     };
 
@@ -100,6 +117,7 @@ export default function ConversAI() {
             if (jsonResponse.message?.content) {
               streamResponse += jsonResponse.message.content;
               setResponse(streamResponse);
+              console.log("streamResponse", response);
 
               // Update the assistant message in messages
               setMessages((prevMessages) => {
@@ -109,9 +127,9 @@ export default function ConversAI() {
                   content: streamResponse,
                 };
                 return updatedMessages;
+
               });
             }
-
             if (jsonResponse.done) {
               break;
             }

@@ -37,3 +37,10 @@ To get started with **Convers.AI**, you need to set up your development environm
   ```bash
   ollama --version
 
+  ## Step 2: Download a Language Model
+
+Once Ollama is installed, download the desired LLM (Language Learning Model) by running:
+
+```bash
+ollama pull llama3.2
+

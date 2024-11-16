@@ -1,6 +1,6 @@
 # Convers.AI – SaaS Platform (In Development)
 
-Convers.AI is a SaaS platform that provides **real-time conversational AI** experiences using **advanced, locally hosted language models**. The platform is designed to support various features that enhance user communication and productivity, making it ideal for **professional meetings** and **live conversations**.
+Convers.AI is a SaaS platform that provides **real-time conversational AI** experiences using **advanced, locally hosted language models**. The platform is designed to enhance user communication and productivity, making it ideal for **professional meetings** and **live conversations**.
 
 ## Features
 
@@ -22,17 +22,18 @@ Convers.AI is a SaaS platform that provides **real-time conversational AI** expe
 - **Meeting and Live Conversation Support**:  
   Equipped with tools that enhance interaction and productivity during **meetings** and **live conversations**.
 
-## Technologies Used
-
-- **Programming Language**: TypeScript
-- **Language Models**: LLaMA, Qwen
-- **APIs**: Used for translation, voice commands, and audio feedback
-
 ## Getting Started
 
-To get started with **Convers.AI**, follow these steps:
+To get started with **Convers.AI**, you need to set up your development environment and install Ollama for local LLM integration.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/convers-ai.git
+### Step 1: Download and Install Ollama
+
+1. Visit the [Ollama official website](https://ollama.com/download) to download the installation package for your operating system.
+2. Choose the version suitable for your OS (e.g., macOS or Windows) and start the download.
+
+**For macOS**:
+- Open the `.pkg` file and follow the installation prompts.
+- Verify the installation with:
+  ```bash
+  ollama --version
 

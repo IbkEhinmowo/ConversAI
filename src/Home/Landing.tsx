@@ -32,7 +32,6 @@ import {
 import Header from "./Header";
 
 export default function LandingPage() {
-  const { theme, setTheme } = useTheme();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {

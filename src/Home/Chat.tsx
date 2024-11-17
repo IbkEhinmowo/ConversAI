@@ -161,12 +161,12 @@ export default function ConversAI() {
   };
 
   return (
-    <div className="max-h-[100vh] bg-background flex border border-blue-500">
+    <div className="relative max-h-screen bg-background flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-secondary transform ${
+        className={`absolute inset-y-0 left-0 z-50 w-64 bg-secondary transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}
+        } transition-transform duration-300 ease-in-out  lg:absolute lg:inset-0`}
       >
         <div className="h-full px-4 py-6 overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
@@ -174,8 +174,12 @@ export default function ConversAI() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden"
+              onClick={() => {
+                setSidebarOpen(!sidebarOpen);
+                console.log(sidebarOpen)
+
+              }}
+              className=""
               aria-label="Close sidebar"
             >
               <X className="h-6 w-6" />
@@ -196,12 +200,13 @@ export default function ConversAI() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen">
-        <header className="bg-background p-4 flex justify-between items-center lg:hidden">
+        <header className="bg-background p-4 flex justify-between items-center ">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+            className=""
           >
             {sidebarOpen ? (
               <X className="h-6 w-6" />
@@ -209,21 +214,18 @@ export default function ConversAI() {
               <Menu className="h-6 w-6" />
             )}
           </Button>
-          <h1 className="text-2xl font-bold">ConversAI</h1>
           <div className="w-8" /> {/* Spacer */}
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+
+            
+              <Select onSelect={handleModelChange} />
+            </div>
+          </CardHeader>
         </header>
 
-        <main className="flex-1 overflow-hidden">
+        <main className="flex-1 overflow-x-hidden">
           <Card className="h-full flex flex-col rounded-none border-x-0 border-b-0">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>ConversAI</CardTitle>
-                <CardDescription>
-                  Your AI-powered assistant for various tasks
-                </CardDescription>
-                <Select onSelect={handleModelChange} />
-              </div>
-            </CardHeader>
             <CardContent className="flex-grow flex flex-col">
               <Tabs
                 value={activeTab}

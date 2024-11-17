@@ -75,12 +75,12 @@ export default function ConversAI() {
     setMessages(newMessages);
 
     // Add empty assistant message
-    const aiMessage = { role: "assistant", content: "" };
+    const aiMessage = { role: "assistant", content: "" }; //llama only responds when role is set to assistant
     setMessages((prev) => [...prev, aiMessage]);
     const aiMessageIndex = newMessages.length; // Index of the assistant message
 
     const requestPayload = {
-      model: "llama3.2",
+      model: model,
       messages: [...newMessages, aiMessage],
     };
 

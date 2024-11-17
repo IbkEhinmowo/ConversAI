@@ -2,91 +2,317 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTheme } from "next-themes";
 import {
-  Moon,
-  Sun,
   Mic,
   FileText,
-  PenTool,
-  BookOpen,
-  Users,
+  Languages,
+  Brain,
   Download,
+  ChevronRight,
+  Terminal,
+  Github,
+  PlayCircle,
+  Check,
+  Plus,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function LandingPage() {
-  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const features = [
+    {
+      icon: <Mic className="h-6 w-6" />,
+      title: "Voice Commands & Control",
+      description:
+        "Control your experience hands-free with natural voice commands",
+    },
+    {
+      icon: <Languages className="h-6 w-6" />,
+      title: "Real-time Translations",
+      description:
+        "Break language barriers with instant translations in 100+ languages",
+    },
+    {
+      icon: <FileText className="h-6 w-6" />,
+      title: "Meeting Support",
+      description:
+        "Automated note-taking and action item tracking during meetings",
+    },
+    {
+      icon: <Brain className="h-6 w-6" />,
+      title: "AI-Powered Assistance",
+      description:
+        "Advanced LLMs provide context-aware support and suggestions",
+    },
+  ];
 
-  if (!mounted) return null;
+  const installSteps = [
+    {
+      title: "Install Ollama",
+      commands: ["# Download and run the installer", "ollama --version"],
+      description:
+        "Download the installer from ollama.ai and follow the prompts",
+    },
+    {
+      title: "Download Language Model",
+      commands: ["ollama pull llama3.2"],
+      description: "Pull the required language model",
+    },
+    {
+      title: "Clone Repository",
+      commands: [
+        "git clone https://github.com/yourusername/convers-ai.git",
+        "cd convers-ai",
+        "npm install",
+      ],
+      description: "Clone the repository and install dependencies",
+    },
+    {
+      title: "Start Server",
+      commands: ["npm start"],
+      description: "Launch the application",
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Alex Chen",
+      role: "Product Manager",
+      content:
+        "Convers.AI has transformed our international team meetings. The real-time translation feature is a game-changer.",
+    },
+    {
+      name: "Sarah Miller",
+      role: "Software Engineer",
+      content:
+        "The voice commands make it incredibly easy to navigate through documentation while coding.",
+    },
+    {
+      name: "David Kim",
+      role: "Team Lead",
+      content:
+        "Meeting summaries and action items are automatically captured, saving us hours of manual note-taking.",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground h-1000vh border border-blue-400">
-      <header className="container mx-auto py-6 px-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">ConversAI</h1>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Brain className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-bold">Convers.AI</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Button>
+            <Button variant="outline">Log In</Button>
+            <Button>Sign Up Free</Button>
+          </div>
+        </div>
       </header>
 
-      <main className="container mx-auto py-12 px-4 md:px-6 lg:px-8" >
-        <section className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Welcome to ConversAI</h2>
-          <p className="text-xl mb-8">
-            Your AI-powered assistant for various tasks
-          </p>
-          <button className="px-4 py-2 text-lg font-semibold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center mx-auto mb-4 ">
-            <Download className="mr-2 h-5 w-5" /> Install ConversAI Extension
-          </button>
-          <p className="text-sm text-muted-foreground">
-            ConversAI is a powerful browser extension that uses speech-to-text
-            and local language models.
-          </p>
-        </section>
-
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <FeatureCard icon={<Users />} title="Interview Prep" />
-          <FeatureCard icon={<FileText />} title="Meeting Summary" />
-          <FeatureCard icon={<Mic />} title="Accessibility " />
-          <FeatureCard icon={<BookOpen />} title="Training" />
-        </section>
-
-        <section className="text-center">
-          <h3 className="text-2xl font-semibold mb-4">Getting Started</h3>
-          <p className="mb-4">
-            Install the ConversAI extension and start boosting your productivity
-            today!
-          </p>
-          <button className="px-4 py-2 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/90">
-            Learn More
-          </button>
-        </section>
-      </main>
-
-      <footer className="container mx-auto py-6 text-center text-sm text-muted-foreground">
-        <p>© 2024 ConversAI. All rights reserved.</p>
-      </footer>
-    </div>
-  );
-}
-
-function FeatureCard({
-  icon,
-  title,
-}: {
-  icon: React.ReactNode;
-  title: string;
-}) {
-  return (
-    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-      <div className="p-6 flex flex-col items-center">
-        <div className="rounded-full bg-primary/10 p-3 mb-2">{icon}</div>
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-muted-foreground text-center">
-          Enhance your {title.toLowerCase()} with AI-powered assistance.
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-20 text-center">
+        <h1 className="text-5xl font-bold mb-6">
+          Enhance Your Conversations with Convers.AI
+        </h1>
+        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Voice commands, translations, and seamless meeting support—powered by
+          advanced LLMs
         </p>
-      </div>
+        <div className="flex justify-center gap-4">
+          <Button size="lg" className="gap-2">
+            Get Started <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button size="lg" variant="outline" className="gap-2">
+            Watch Demo <PlayCircle className="h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="container mx-auto px-4 py-20">
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Powerful Features
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => (
+            <Card
+              key={index}
+              className="border-2 hover:border-primary transition-colors"
+            >
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  {feature.icon}
+                </div>
+                <CardTitle>{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{feature.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Installation Guide */}
+      <section className="container mx-auto px-4 py-20 bg-secondary/30">
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Quick Installation Guide
+        </h2>
+        <div className="max-w-3xl mx-auto">
+          <Tabs defaultValue="step1" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              {installSteps.map((step, index) => (
+                <TabsTrigger key={index} value={`step${index + 1}`}>
+                  Step {index + 1}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {installSteps.map((step, index) => (
+              <TabsContent key={index} value={`step${index + 1}`}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{step.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4 text-muted-foreground">
+                      {step.description}
+                    </p>
+                    <pre className="bg-secondary/50 p-4 rounded-lg">
+                      {step.commands.map((cmd, i) => (
+                        <code key={i} className="block text-sm">
+                          {cmd}
+                        </code>
+                      ))}
+                    </pre>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="container mx-auto px-4 py-20">
+        <h2 className="text-3xl font-bold text-center mb-12">What Users Say</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index} className="bg-primary/5">
+              <CardContent className="pt-6">
+                <p className="mb-4">{testimonial.content}</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    {testimonial.name[0]}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="container mx-auto px-4 py-20 bg-secondary/30">
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Frequently Asked Questions
+        </h2>
+        <div className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>
+                What are the system requirements?
+              </AccordionTrigger>
+              <AccordionContent>
+                Convers.AI requires a modern web browser and 4GB of RAM minimum.
+                For optimal performance, we recommend 8GB of RAM and a
+                multi-core processor.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>
+                Which languages are supported?
+              </AccordionTrigger>
+              <AccordionContent>
+                We support real-time translation for over 100 languages, with
+                particularly strong performance in major business languages
+                including English, Spanish, Mandarin, and Japanese.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>Is my data secure?</AccordionTrigger>
+              <AccordionContent>
+                Yes, all data is processed locally on your machine using Ollama.
+                We never store or transmit your conversations to external
+                servers.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 py-20 text-center">
+        <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
+        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Join thousands of users who are already enhancing their conversations
+          with AI
+        </p>
+        <div className="flex justify-center gap-4">
+          <Button size="lg" className="gap-2">
+            Download Now <Download className="h-4 w-4" />
+          </Button>
+          <Button size="lg" variant="outline" className="gap-2">
+            View on GitHub <Github className="h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Brain className="h-6 w-6 text-primary" />
+              <span className="font-semibold">Convers.AI</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              © 2024 Convers.AI. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

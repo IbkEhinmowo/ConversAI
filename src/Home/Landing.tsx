@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import {
   Mic,
@@ -18,6 +18,7 @@ import {
   Plus,
   Sun,
   Moon,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +32,14 @@ import {
 import Header from "./Header";
 
 export default function LandingPage() {
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const features = [
     {
@@ -115,21 +123,33 @@ export default function LandingPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-5xl font-bold mb-6">
-          Enhance Your Conversations with Convers.AI
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Voice commands, translations, and seamless meeting support—powered by
-          advanced LLMs
-        </p>
-        <div className="flex justify-center gap-4">
-          <Button size="lg" className="gap-2">
-            Get Started <ChevronRight className="h-4 w-4" />
-          </Button>
-          <Button size="lg" variant="outline" className="gap-2">
-            Watch Demo <PlayCircle className="h-4 w-4" />
-          </Button>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 z-0 bg-gradient-to-br from-primary/20 to-secondary/20 transition-opacity duration-500 ease-in-out"
+          style={{ opacity: 1 - scrollY / 500 }}
+        />
+        <div
+          className="container mx-auto px-4 text-center z-10 transition-all duration-500 ease-in-out"
+          style={{ transform: `translateY(${-scrollY / 10}px)` }}
+        >
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in-up">
+            Enhance Your Conversations with Convers.AI
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+            Voice commands, translations, and seamless meeting support—powered
+            by advanced LLMs
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-400">
+            <Button size="lg" className="gap-2">
+              Get Started <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button size="lg" variant="outline" className="gap-2">
+              Watch Demo <PlayCircle className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ChevronDown className="h-8 w-8 text-muted-foreground" />
         </div>
       </section>
 
@@ -142,7 +162,8 @@ export default function LandingPage() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="border-2 hover:border-primary transition-colors"
+              className="border-2 hover:border-primary transition-all duration-300 ease-in-out transform hover:scale-105 animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
@@ -173,7 +194,11 @@ export default function LandingPage() {
               ))}
             </TabsList>
             {installSteps.map((step, index) => (
-              <TabsContent key={index} value={`step${index + 1}`}>
+              <TabsContent
+                key={index}
+                value={`step${index + 1}`}
+                className="animate-fade-in"
+              >
                 <Card>
                   <CardHeader>
                     <CardTitle>{step.title}</CardTitle>
@@ -202,7 +227,11 @@ export default function LandingPage() {
         <h2 className="text-3xl font-bold text-center mb-12">What Users Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-primary/5">
+            <Card
+              key={index}
+              className="bg-primary/5 transition-all duration-300 ease-in-out transform hover:scale-105 animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
               <CardContent className="pt-6">
                 <p className="mb-4">{testimonial.content}</p>
                 <div className="flex items-center gap-2">
@@ -268,7 +297,7 @@ export default function LandingPage() {
           Join thousands of users who are already enhancing their conversations
           with AI
         </p>
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button size="lg" className="gap-2">
             Download Now <Download className="h-4 w-4" />
           </Button>

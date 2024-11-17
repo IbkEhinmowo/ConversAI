@@ -1,6 +1,6 @@
 # Convers.AI – SaaS Platform (In Development)
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/15636d1b-598f-4218-b36d-699a9684a345" alt="Project logo" width="200">
+  <img src="https://github.com/user-attachments/assets/15636d1b-598f-4218-b36d-699a9684a345" alt="Project logo" width="150">
 </p>
 
 Convers.AI is a SaaS platform that provides **real-time conversational AI** experiences using **advanced, locally hosted language models**. The platform is designed to enhance user communication and productivity, making it ideal for **professional meetings** and **live conversations**.

@@ -281,8 +281,8 @@ export default function ConversAI() {
                       <div
                         className={`mx-2 p-4 rounded-3xl max-w-3xl  ${
                           message.role === "user"
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted"
+                            ? "bg-slate-100 text-black-foreground"
+                            : "bg-trasparent black"
                         }`}
                       >
                         <ReactMarkdown

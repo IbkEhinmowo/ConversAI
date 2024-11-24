@@ -1,7 +1,5 @@
 /** @format */
 
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import {
   Mic,
@@ -19,7 +17,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
@@ -31,11 +28,16 @@ import ReactMarkdown from "react-markdown";
 import Select from "./Select";
 
 export default function ConversAI() {
+  // Define the preprompt
+  const preprompt = `
+    You are the participant in a meeting or interview. Respond clearly, confidently, and concisely, focusing on your skills, problem-solving, and relevant experience.
+     Explain your answers or decisions or ideas very briefly, and provide relevant insights when necessary. If a question or discussion point is unclear, ask for clarification before responding.
+      Keep responses professional and to the point, fostering a productive and focused conversation 
+    You are here to help with interview / Meeting preparation and realtime support, meeting summaries.
+  `;
+
   const initialMessages = [
-    { role: "user", content: "your name is beth" },
-    { role: "ai", content: "okay" },
-    { role: "user", content: "my name is ibukun" },
-    { role: "ai", content: "okay " },
+
   ];
 
   const [activeTab, setActiveTab] = useState("interview");
@@ -82,9 +84,14 @@ export default function ConversAI() {
     setMessages((prev) => [...prev, aiMessage]);
     const aiMessageIndex = newMessages.length;
 
+    // Include the preprompt in the request payload
     const requestPayload = {
       model: model,
-      messages: [...newMessages, aiMessage],
+      messages: [
+        { role: "system", content: preprompt },
+        ...newMessages,
+        aiMessage,
+      ],
     };
 
     try {
@@ -120,7 +127,6 @@ export default function ConversAI() {
             if (jsonResponse.message?.content) {
               streamResponse += jsonResponse.message.content;
               setResponse(streamResponse);
-              console.log("streamResponse", response);
 
               setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
@@ -152,32 +158,29 @@ export default function ConversAI() {
 
   const handleNewChat = () => {
     // Placeholder function for creating a new chat
-    setMessages([]);
+    setMessages([...initialMessages]); // Reset to initial messages without preprompt
     setInputValue("");
     setResponse("");
     console.log("Creating a new chat");
-
-
   };
 
   return (
     <div className="relative max-h-screen bg-background flex">
       {/* Sidebar */}
       <div
-        className={`absolute inset-y-0 left-0 z-50 w-64 bg-secondary transform ${
+        className={`absolute inset-y-0 left-0 z-50 w-64 bg-secondary transform rounded-2xl ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out  lg:absolute lg:inset-0`}
       >
-        <div className="h-full px-4 py-6 overflow-y-auto">
-          <div className="flex justify-between items-center mb-6">
+        <div className="h-full px-4 py-6 overflow-y-auto rounded-xl ">
+          <div className="flex justify-between items-center mb-6 ">
             <h2 className="text-xl font-semibold">Previous Chats</h2>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => {
                 setSidebarOpen(!sidebarOpen);
-                console.log(sidebarOpen)
-
+                console.log(sidebarOpen);
               }}
               className=""
               aria-label="Close sidebar"
@@ -217,8 +220,6 @@ export default function ConversAI() {
           <div className="w-8" /> {/* Spacer */}
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-
-            
               <Select onSelect={handleModelChange} />
             </div>
           </CardHeader>
@@ -279,9 +280,9 @@ export default function ConversAI() {
                         </AvatarFallback>
                       </Avatar>
                       <div
-                        className={`mx-2 p-4 rounded-3xl max-w-3xl  ${
+                        className={`mx-2 p-3 rounded-xl max-w-3xl  ${
                           message.role === "user"
-                            ? "bg-slate-100 text-black-foreground"
+                            ? "bg-black text-white"
                             : "bg-trasparent black"
                         }`}
                       >
@@ -329,6 +330,7 @@ export default function ConversAI() {
                   placeholder="Type your message here..."
                   onChange={handleInputChange}
                   value={inputValue}
+                  className="rounded-2xl p-6"
                 />
                 <Button size="icon" onClick={handleClick} disabled={loading}>
                   <Send className="h-4 w-4" />

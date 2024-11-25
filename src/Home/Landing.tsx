@@ -308,7 +308,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Brain className="h-6 w-6 text-primary" />

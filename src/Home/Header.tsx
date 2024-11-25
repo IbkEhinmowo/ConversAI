@@ -20,7 +20,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-4">
             <Button>
-              <Link to="/Chat">Start</Link>
+              <Link to="/context">Start</Link>
             </Button>
           </div>
         </div>

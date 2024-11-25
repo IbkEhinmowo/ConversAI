@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
 
 interface ContextInputProps {
   onSubmit: (context: string, file: File | null) => void;
 }
 
-export default function ContextInput({ onSubmit }: ContextInputProps) {
+export default function ContextInput() {
   const [context, setContext] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -39,7 +41,7 @@ export default function ContextInput({ onSubmit }: ContextInputProps) {
   };
 
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-[100vw] ">
       <CardHeader>
         <CardTitle>Provide Context</CardTitle>
       </CardHeader>
@@ -85,7 +87,9 @@ export default function ContextInput({ onSubmit }: ContextInputProps) {
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full">
-            Start Chat
+            <Link to="/chat">Start Chat </Link>
+            
+            
           </Button>
         </CardFooter>
       </form>

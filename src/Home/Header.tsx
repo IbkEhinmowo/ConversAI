@@ -2,10 +2,10 @@
 
 import { Moon, Sun, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
+import { Link } from "react-router-dom";
+
 
 export default function Header() {
-  const { theme, setTheme } = useTheme();
 
   return (
     <>
@@ -19,18 +19,9 @@ export default function Header() {
             <span className="text-2xl font-bold">Convers.AI</span>
           </div>
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
+            <Button>
+              <Link to="/context">Start</Link>
             </Button>
-            <Button variant="outline">Log In</Button>
-            <Button>Sign Up Free</Button>
           </div>
         </div>
       </header>

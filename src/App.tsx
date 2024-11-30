@@ -1,19 +1,23 @@
-import { useState } from 'react'
 import LandingPage from './Home/Landing'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ContextInput from './Chat/context';
+
 import Chat from './Home/Chat'
-import Selector from './Home/Select'
 import './App.css'
 
 function App() {
 
   return (
     <>
-      <LandingPage />
-      <Chat />
-
-      
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/context" element={<ContextInput />} />
+        </Routes>
+      </Router>
     </>
-  )
+  );
 }
 
 export default App

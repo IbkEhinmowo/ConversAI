@@ -1,4 +1,4 @@
-# Convers.AI – SaaS Platform (In Development)
+# Convers.AI – SaaS Platform scratched
 <p align="center">
   <img src="https://github.com/user-attachments/assets/15636d1b-598f-4218-b36d-699a9684a345" alt="Project logo" width="150">
 </p>
